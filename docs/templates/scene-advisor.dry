@@ -1,0 +1,101 @@
+title: Advisor Name
+subtitle: Their role or expertise
+frequency: 0                           # Pinned card (always visible)
+view-if: advisor_recruited = 1         # Only if advisor has been recruited
+on-arrival: advisor_action_timer = 6; month_actions += 1
+is-card: true
+tags: advisor
+card-image: img/advisors/advisor_name.jpg
+
+= Advisor Name
+
+**[Their Title/Position]**
+
+Brief biographical information about this advisor. What's their background?
+What expertise do they bring? What's their personality or philosophy?
+
+[? if relationship_level >= 3 :
+  They have become a trusted confidant and key member of your inner circle.
+?]
+[? if relationship_level < 3 :
+  They are a valuable advisor, though you're still building trust.
+?]
+
+---
+
+**Current Advice:**
+
+[? if crisis_active = 1 :
+  "Given the current crisis, I recommend [specific advice for crisis]."
+?]
+[? if not crisis_active :
+  "Things are stable. Focus on [strategic advice for normal times]."
+?]
+
+@signature_action
+title: [Advisor's Signature Ability]
+subtitle: Use their unique expertise (-2 resources, special effect)
+choose-if: advisor_action_timer <= 0 and resources >= 2
+unavailable-subtitle: [? if advisor_action_timer > 0 : [+ advisor_name +] is not ready (cooldown: [+ advisor_action_timer +] months) ?][? if resources < 2 : Not enough resources ?]
+on-arrival: {!
+  Q.resources -= 2;
+  Q.advisor_action_timer = 6;
+
+  // Advisor-specific expertise bonus
+  var base_effect = 5;
+  var expertise_bonus = 3;
+  var total = base_effect + expertise_bonus;
+
+  Q.public_support += total;
+  Q.advisor_action_count += 1;
+!}
+
+With [advisor name]'s expertise, you achieve results beyond what you could alone.
+
+[? if advisor_action_count >= 3 :
+  Your repeated collaboration has made you a formidable team.
+?]
+
+@strategic_advice
+title: Seek Strategic Advice
+subtitle: Get counsel on long-term planning (no cost, informational)
+on-arrival: {}
+
+"Here's how I see the situation," [advisor name] begins.
+
+[? if public_support < 30 :
+  "Your support is critically low. Prioritize popular policies and avoid risks."
+?]
+[? if public_support >= 30 and public_support < 60 :
+  "You're in a stable position. This is the time to make bold moves."
+?]
+[? if public_support >= 60 :
+  "Your popularity gives you political capital. Use it wisely on reforms."
+?]
+
+[? if resources < 3 :
+  "Resources are tight. Focus on fundraising before major initiatives."
+?]
+
+[? if dissent > 0.5 :
+  "Internal divisions are serious. Heal the rifts or risk collapse."
+?]
+
+"Ultimately, the decision is yours. I trust your judgment."
+
+@personal_conversation
+title: Personal Conversation
+subtitle: Deepen your relationship (builds trust)
+on-arrival: {!
+  Q.relationship_level += 1;
+  Q.advisor_loyalty += 5;
+!}
+
+You spend time getting to know [advisor name] beyond professional matters.
+
+They share stories from their past, revealing what drives them. You feel
+a deeper connection and mutual respect.
+
+[? if relationship_level >= 5 :
+  "I'm with you to the end," they say. "Whatever comes, we face it together."
+?]

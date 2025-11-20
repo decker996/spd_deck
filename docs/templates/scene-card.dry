@@ -1,0 +1,45 @@
+title: Card Name
+subtitle: What this card represents
+frequency: 300                          # 0-1000: draw probability (300 = 30%)
+view-if: card_timer <= 0               # Only show when off cooldown
+on-arrival: card_timer = 6; month_actions += 1  # Set cooldown and track action
+is-card: true                          # Mark as deck card
+tags: party_affairs                    # Category tag
+card-image: img/cards/card_name.jpg    # Optional image
+
+= Card Title
+
+Description of the situation or opportunity this card presents.
+What's the context? What decision needs to be made?
+
+@option_conservative
+title: Conservative Option
+subtitle: Safe choice with modest effects (+1 resources)
+on-arrival: resources += 1
+
+Result of playing it safe. Steady, predictable outcome.
+
+@option_balanced
+title: Balanced Option
+subtitle: Middle ground (+2 resources, -3 support)
+choose-if: resources >= 0
+on-arrival: resources += 2; public_support -= 3
+
+Result of the balanced approach. Tradeoffs involved.
+
+@option_risky
+title: Risky Option
+subtitle: High risk, high reward (+5 resources, -10 support, requires 2 resources)
+choose-if: resources >= 2
+unavailable-subtitle: Not enough resources (need 2, have [+ resources +])
+on-arrival: {!
+  Q.resources -= 2;
+  Q.resources += 5;
+  Q.public_support -= 10;
+  Q.risky_action_taken = 1;
+!}
+
+Result of the risky choice. Could be good or bad depending on context.
+
+[? if public_support < 30 : This hurt your already-low support! ?]
+[? if public_support >= 30 : You can afford the support loss. ?]

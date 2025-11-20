@@ -1,0 +1,33 @@
+title: Scene Title
+subtitle: Brief description of what happens here
+new-page: true
+tags: category_name
+
+= Scene Heading (Optional)
+
+Narrative text describing the situation. You can use [+ variables +] to show game state,
+and [? if condition : conditional text ?] to adapt the narrative.
+
+Current resources: [+ resources +]
+[? if resources > 5 : You have plenty of resources. ?]
+[? if resources <= 2 : Resources are running low! ?]
+
+@choice_1
+title: First Choice
+subtitle: Brief description of effects (+2 resources, -5 support)
+choose-if: resources >= 0
+unavailable-subtitle: Cannot choose this because [reason]
+on-arrival: resources += 2; some_flag = 1
+
+Narrative describing the outcome of this choice.
+This text appears after the player selects this option.
+
+You can reference what happened: You gained resources and set the flag.
+
+@choice_2
+title: Second Choice
+subtitle: Alternative with different tradeoffs
+on-arrival: other_variable -= 1
+go-to: next_scene
+
+This choice leads to a different scene.

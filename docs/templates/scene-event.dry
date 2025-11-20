@@ -1,0 +1,82 @@
+title: Event Name
+subtitle: What triggered this event
+view-if: year = 2025 and month = 6     # Specific trigger condition
+max-visits: 1                          # One-time event
+on-arrival: month_actions += 1; event_flag = 1  # Set flag for tracking
+is-card: true
+tags: event, crisis                    # Tag as event for organization
+
+= Event Title
+
+**[Year [+ year +], Month [+ month +]]**
+
+[? if previous_related_choice = "A" :
+  Your previous decision to [action A] has led to this situation...
+?]
+[? if previous_related_choice = "B" :
+  Because you chose [action B] before, things have developed differently...
+?]
+
+Dramatic description of the event. What happened? Why is it significant?
+What are the stakes? What needs to be decided?
+
+This is a pivotal moment that could change the course of the game.
+
+@response_measured
+title: Measured Response
+subtitle: Moderate, cautious approach (-1 resources, +3 support)
+choose-if: resources >= 1
+unavailable-subtitle: Need 1 resource for this approach
+on-arrival: {!
+  Q.resources -= 1;
+  Q.public_support += 3;
+  Q.response_type = "measured";
+!}
+
+Result of the measured response. You played it safe and maintained stability.
+
+The public appreciates your careful approach, even if it wasn't dramatic.
+
+@response_bold
+title: Bold Action
+subtitle: Aggressive, high-stakes move (-3 resources, major effects)
+choose-if: resources >= 3
+unavailable-subtitle: Need 3 resources for bold action
+on-arrival: {!
+  Q.resources -= 3;
+  Q.response_type = "bold";
+
+  // Outcome depends on conditions
+  if (Q.public_support >= 50) {
+    Q.public_support += 15;
+    Q.prestige += 10;
+    Q.bold_success = 1;
+  } else {
+    Q.public_support -= 10;
+    Q.dissent += 0.15;
+    Q.bold_failure = 1;
+  }
+!}
+
+[? if bold_success = 1 :
+  Your bold move pays off! The public rallies behind your decisive leadership.
+  This will be remembered as a turning point.
+?]
+
+[? if bold_failure = 1 :
+  Your bold gamble backfires. Without sufficient support, your aggressive action
+  is seen as reckless. Opposition grows.
+?]
+
+@response_deflect
+title: Deflect and Delay
+subtitle: Buy time, avoid commitment (no immediate cost, +5 dissent)
+on-arrival: {!
+  Q.dissent += 0.05;
+  Q.response_type = "deflect";
+  Q.crisis_delayed = 1;
+!}
+
+You've avoided making a hard decision, but this may come back to haunt you.
+
+Your supporters are frustrated by your indecision, and the underlying problems remain.
